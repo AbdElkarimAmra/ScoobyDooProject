@@ -121,3 +121,37 @@ scoobydoo |>
   count(engagement)
 ```
 
+```{r}
+# MODEL 1: Popular Guest effect (Batman OR Hex Girls OR Scrappy-Doo)
+model1 <- lm(as.numeric(imdb) ~ as.numeric(batman == "TRUE" | hex_girls == "TRUE" | scrappy_doo == "TRUE"), 
+             data = scoobydoo %>% filter(imdb != "NULL"))
+summary(model1)
+
+# MODEL 2: Individual character effects
+model2 <- lm(as.numeric(imdb) ~ as.numeric(batman == "TRUE") + 
+                                    as.numeric(hex_girls == "TRUE") + 
+                                    as.numeric(scrappy_doo == "TRUE"),
+             data = scoobydoo %>% filter(imdb != "NULL"))
+summary(model2)
+
+# MODEL 3: All guest characters (comprehensive)
+model3 <- lm(as.numeric(imdb) ~ as.numeric(batman == "TRUE") + 
+                                    as.numeric(hex_girls == "TRUE") + 
+                                    as.numeric(scrappy_doo == "TRUE") +
+                                    as.numeric(blue_falcon == "TRUE") +
+                                    as.numeric(scooby_dum == "TRUE"),
+             data = scoobydoo %>% filter(imdb != "NULL"))
+summary(model3)
+
+# Get tidy coefficient outputs
+library(broom)
+cat("=== MODEL 1: Popular Guest Effect ===\n")
+print(tidy(model1))
+
+cat("\n=== MODEL 2: Specific Characters (Research Question) ===\n")
+print(tidy(model2))
+
+cat("\n=== MODEL 3: All Guest Characters ===\n")
+print(tidy(model3))
+```
+
