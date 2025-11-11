@@ -54,3 +54,18 @@ scoobydoo |>
   pivot_wider(names_from = yn, values_from = n) 
 ```
 
+```{r}
+# make "guest" dataset
+scoobydoo_guest <- scoobydoo |>
+  select(batman, blue_falcon, hex_girls, scooby_dum, scrappy_doo, series_name, imdb) |>
+  pivot_longer(cols = c(batman, blue_falcon, hex_girls, scooby_dum, scrappy_doo), names_to = "character", values_to = "TF")
+```
+
+```{r}
+# boxplots of imdb ratings for guest characters
+scoobydoo_guest |>
+  filter(imdb != "NULL") |>
+  ggplot(aes(x=TF, y=as.numeric(imdb)))+
+  geom_boxplot()+
+  facet_wrap(~character)
+```
