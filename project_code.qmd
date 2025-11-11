@@ -57,7 +57,7 @@ scoobydoo |>
 ```{r}
 # make "guest" dataset
 scoobydoo_guest <- scoobydoo |>
-  select(batman, blue_falcon, hex_girls, scooby_dum, scrappy_doo, series_name, imdb) |>
+  select(batman, blue_falcon, hex_girls, scooby_dum, scrappy_doo, series_name, title, imdb, engagement) |>
   pivot_longer(cols = c(batman, blue_falcon, hex_girls, scooby_dum, scrappy_doo), names_to = "character", values_to = "TF")
 ```
 
@@ -69,3 +69,55 @@ scoobydoo_guest |>
   geom_boxplot()+
   facet_wrap(~character)
 ```
+```{r}
+# calculating mean and sd for imdb, engagement
+scoobydoo |>
+  select(imdb, engagement) |>
+  filter(imdb != "NULL",
+         engagement != "NULL") |>
+  mutate(imdb = as.numeric(imdb),
+         engagement = as.numeric(engagement)) |>
+  summarize(mean_imdb = mean(imdb),
+            sd_imdb = sd(imdb),
+            mean_engage = mean(engagement),
+            sd_engage = sd(engagement)) 
+```
+ 
+```{r}
+# distribution of imdb, engagement
+scoobydoo |>
+  filter(engagement != "NULL") |>
+  ggplot(aes(x=as.numeric(engagement)))+
+  geom_histogram()+
+  labs(title = "distribution of engagement (normal scale)",
+       x= "engagement")
+
+scoobydoo |>
+  filter(engagement != "NULL") |>
+  ggplot(aes(x=as.numeric(engagement)))+
+  geom_histogram()+
+  scale_x_log10()+
+  labs(title = "distribution of engagement (log scale)",
+       x = "log(engagement)")
+
+
+scoobydoo |>
+  filter(imdb != "NULL") |>
+  ggplot(aes(x=as.numeric(imdb)))+
+  geom_boxplot()
+
+```
+
+```{r}
+# missing entries
+scoobydoo |>
+  select(imdb) |>
+  filter(imdb == "NULL") |>
+  count(imdb) 
+
+scoobydoo |>
+  select(engagement) |>
+  filter(engagement == "NULL") |>
+  count(engagement)
+```
+
