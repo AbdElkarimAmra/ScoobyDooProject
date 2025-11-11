@@ -44,3 +44,13 @@ scoobydoo_monsters <- scoobydoo |>
   mutate(monster_type = str_trim(monster_type, side = "left"))
 ```
 
+```{r}
+# how many times to characters appear?
+scoobydoo |>
+  select(batman, scrappy_doo, scooby_dum, hex_girls, blue_falcon) |>
+  pivot_longer(cols = everything(), names_to = "character", values_to = "yn") |>
+  group_by(character, yn) |>
+  summarize(n = n()) |>
+  pivot_wider(names_from = yn, values_from = n) 
+```
+
