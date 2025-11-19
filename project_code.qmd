@@ -88,6 +88,7 @@ scoobydoo |>
  
 ```{r}
 # distribution of imdb, engagement
+library(patchwork)
 p1 = scoobydoo |>
   filter(engagement != "NULL") |>
   ggplot(aes(x=as.numeric(engagement)))+
