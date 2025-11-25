@@ -1,29 +1,26 @@
-<<<<<<< HEAD
 ---
-title: "project-code"
-format: html
+title: "Project Milestone 2"
+author: "Karim Amra, Makol Chuol, Sarah Radzilowski, Noah Steinhouse"
+date: now
+date-format: "YYYY-MM-DDTHH:mm:ssZ"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    embed-resources: true
+    code-tools: true 
+    df-print: paged
 ---
+
+# Load Data/Packages
 
 ```{r}
 # load data
 library(tidyverse)
 library(tidytuesdayR)
+library(patchwork)
 
 scoobydoo <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2021/2021-07-13/scoobydoo.csv')
-```
-
-
-
-```{r}
-# how many times to characters appear?
-scoobydoo |>
-  select(batman, scrappy_doo, scooby_dum, hex_girls, blue_falcon) |>
-  pivot_longer(cols = everything(), names_to = "character", values_to = "yn") |>
-  group_by(character, yn) |>
-  summarize(n = n()) |>
-  pivot_wider(names_from = yn, names_prefix = "Appear_",
-              values_from = n) |>
-  arrange(Appear_TRUE)
 ```
 
 ```{r}
@@ -36,6 +33,20 @@ scoobydoo_guest <- scoobydoo |>
   mutate(imdb = as.numeric(imdb)) 
 
 ```
+
+# Data Viz and Summary
+```{r}
+# how many times to characters appear?
+scoobydoo |>
+  select(batman, scrappy_doo, scooby_dum, hex_girls, blue_falcon) |>
+  pivot_longer(cols = everything(), names_to = "character", values_to = "yn") |>
+  group_by(character, yn) |>
+  summarize(n = n()) |>
+  pivot_wider(names_from = yn, names_prefix = "Appear_",
+              values_from = n) |>
+  arrange(Appear_TRUE)
+```
+
 
 ```{r}
 # boxplot of ratings (w/ or w/o guest)
@@ -93,15 +104,14 @@ scoobydoo |>
  
 ```{r}
 # distribution of imdb, engagement
-library(patchwork)
-p1 = scoobydoo |>
+scoobydoo |>
   filter(engagement != "NULL") |>
   ggplot(aes(x=as.numeric(engagement)))+
   geom_histogram()+
   labs(title = "Distribution of Engagement (Normal Scale)",
        x= "Engagement")
 
-p2 = scoobydoo |>
+scoobydoo |>
   filter(engagement != "NULL") |>
   ggplot(aes(x=as.numeric(engagement)))+
   geom_histogram()+
@@ -110,8 +120,9 @@ p2 = scoobydoo |>
        x = "log(Engagement)")
 
 
-p1 / p2
 ```
+
+
 ```{r}
 # bar plot of episodes guest appears in
 scoobydoo_guest |>
@@ -137,6 +148,9 @@ scoobydoo |>
   count(engagement)
 ```
 
+
+
+# Models
 ```{r}
 # keep only valid (non-missing) IMDB and recode variables
 model_data <- scoobydoo %>%
@@ -164,6 +178,8 @@ model <- lm(imdb ~ batman + blue_falcon + hex_girls + scooby_dum + scrappy_doo, 
 # Summarize regression results (shows coefficients, model fit, significance)
 summary(model)
 ```
+
+# Confidence Interval
 
 ```{r}
 
