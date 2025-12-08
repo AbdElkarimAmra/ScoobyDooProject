@@ -93,12 +93,21 @@ scoobydoo |>
 
 ```{r}
 # box plot for IMDB score distribution
-scoobydoo |>
+P1 <- scoobydoo |>
   filter(imdb != "NULL") |>
   ggplot(aes(x=as.numeric(imdb)))+
   geom_boxplot()+
   labs(x = "IMDB Score",
-       title = "Distribution of IMDB scores")
+       title = "B.")
+
+P2 <- scoobydoo |>
+  filter(imdb != "NULL") |>
+  ggplot(aes(x=as.numeric(imdb)))+
+  geom_histogram(color = "white")+
+  labs(x= "IMDB Score",
+       title = "A. IMDB Scores")
+
+
 ```
 
  
@@ -107,19 +116,24 @@ scoobydoo |>
 scoobydoo |>
   filter(engagement != "NULL") |>
   ggplot(aes(x=as.numeric(engagement)))+
-  geom_histogram()+
+  geom_histogram(color = "white")+
   labs(title = "Distribution of Engagement (Normal Scale)",
        x= "Engagement")
 
-scoobydoo |>
+P3 <- scoobydoo |>
   filter(engagement != "NULL") |>
   ggplot(aes(x=as.numeric(engagement)))+
-  geom_histogram()+
+  geom_histogram(color = "white")+
   scale_x_log10()+
-  labs(title = "Distribution of Engagement (Log Scale)",
+  labs(title = "C. Engagement",
        x = "log(Engagement)")
 
+P3
 
+```
+```{r}
+# combining plots
+P2 / P1 | P3
 ```
 
 
@@ -195,4 +209,6 @@ par(mfrow=c(2,2))
 plot(model)                  # Visualize residuals and check assumptions
 
 ```
+
+
 
